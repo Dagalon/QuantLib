@@ -3,6 +3,20 @@ cmake_minimum_required(VERSION 3.15.0)
 # For MSVC RUNTIME LIBRARY, need CMP0091=NEW and cmake 3.15+
 cmake_policy(SET CMP0091 NEW)
 
+# Boost
+
+if(${CMAKE_CL_64})
+    message(STATUS "x64 config")
+    set(Boost_INCLUDE_DIR "D:/Libraries/C++/boost_1_88_0")
+    set(Boost_LIBRARY_DIR "D:/Libraries/C++/boost_1_88_0/stage/x64/lib")
+    set(CMAKE_ARCHITECTURE "X64")
+ELSE()
+    message(STATUS "x86 config")
+    set(Boost_INCLUDE_DIR "D:/Libraries/C++/boost_1_88_0")
+    set(Boost_LIBRARY_DIR "D:/Libraries/C++/boost_1_88_0/stage/x86/lib")
+    set(CMAKE_ARCHITECTURE "X86")
+ENDIF()
+
 # Version info
 set(QUANTLIB_VERSION_MAJOR 1)
 set(QUANTLIB_VERSION_MINOR 33)
@@ -39,9 +53,9 @@ set(QL_INSTALL_CMAKEDIR "lib/cmake/${PACKAGE_NAME}" CACHE STRING
     "Installation directory for CMake scripts")
 
 # Options
-option(QL_BUILD_BENCHMARK "Build benchmark" ON)
+option(QL_BUILD_BENCHMARK "Build benchmark" OFF)
 option(QL_BUILD_EXAMPLES "Build examples" ON)
-option(QL_BUILD_TEST_SUITE "Build test suite" ON)
+option(QL_BUILD_TEST_SUITE "Build test suite" OFF)
 option(QL_BUILD_FUZZ_TEST_SUITE "Build fuzz test suite" OFF) 
 option(QL_ENABLE_OPENMP "Detect and use OpenMP" OFF)
 option(QL_ENABLE_PARALLEL_UNIT_TEST_RUNNER "Enable the parallel unit test runner" OFF)
@@ -56,7 +70,7 @@ option(QL_EXTRA_SAFETY_CHECKS "Extra safety checks should be performed" OFF)
 option(QL_HIGH_RESOLUTION_DATE "Enable date resolution down to microseconds" OFF)
 option(QL_THROW_IN_CYCLES "Throw an exception when a notification loop is detected" OFF)
 option(QL_FASTER_LAZY_OBJECTS "Cause lazy objects to forward just the first notification instead of every one" ON)
-option(QL_NULL_AS_FUNCTIONS "Enable the implementation of Null as template functions" OFF)
+option(QL_NULL_AS_FUNCTIONS "Enable the implementation of Null as template functions" ON)
 option(QL_INSTALL_BENCHMARK "Install benchmark" ON)
 option(QL_INSTALL_EXAMPLES "Install examples" ON)
 option(QL_INSTALL_TEST_SUITE "Install test suite" ON)
@@ -69,8 +83,9 @@ option(QL_USE_STD_FUNCTION "Use std::function and std::bind instead of Boost one
 option(QL_USE_STD_OPTIONAL "Use std::optional instead of boost::optional" OFF)
 option(QL_USE_STD_SHARED_PTR "Use standard smart pointers instead of Boost ones" OFF)
 option(QL_USE_STD_TUPLE "Use std::tuple instead of boost::tuple" ON)
-set(QL_EXTERNAL_SUBDIRECTORIES "" CACHE STRING "Optional list of external source directories to be added to the build (semicolon-separated)")
-set(QL_EXTRA_LINK_LIBRARIES "" CACHE STRING "Optional extra link libraries to add to QuantLib")
+set(QL_EXTERNAL_SUBDIRECTORIES "../XAD;../quantlib-xad" CACHE STRING "Optional list of external source directories to be added to the build (semicolon-separated)")
+set(QL_EXTRA_LINK_LIBRARIES "QuantLib-Risks" CACHE STRING "Optional extra link libraries to add to QuantLib")
+set(XAD_STATIC_MSVC_RUNTIME ON CACHE BOOL "Use static MSVC runtime" FORCE)
 
 # Require C++14 or higher
 if (NOT DEFINED CMAKE_CXX_STANDARD)
